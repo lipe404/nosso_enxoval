@@ -68,6 +68,18 @@
               <select id="room-filter">
                 <option value="">Todos os cômodos</option>
               </select>
+              <select id="priority-filter">
+                <option value="">Todas as prioridades</option>
+                <option value="basico">Básico</option>
+                <option value="necessario">Necessário</option>
+                <option value="util">Útil</option>
+                <option value="luxo">Luxo</option>
+              </select>
+              <select id="status-filter">
+                <option value="">Todos os status</option>
+                <option value="comprado">Comprado</option>
+                <option value="pendente">Pendente</option>
+              </select>
             </div>
             <div id="items-list" class="items-list"></div>
           </div>
@@ -81,6 +93,9 @@
             </button>
             <button id="list-view" class="btn btn-outline">
               <i class="fas fa-list"></i> Lista
+            </button>
+            <button id="accounts-view" class="btn btn-outline">
+              <i class="fas fa-calculator"></i> Contas
             </button>
           </div>
 
@@ -96,6 +111,40 @@
 
           <div id="list-container" class="list-container" style="display: none">
             <div id="items-grid" class="items-grid"></div>
+          </div>
+
+          <div
+            id="accounts-container"
+            class="accounts-container"
+            style="display: none"
+          >
+            <div class="accounts-summary">
+              <h2>Resumo Financeiro</h2>
+              <div class="summary-cards">
+                <div class="summary-card total">
+                  <h3>Total Geral</h3>
+                  <div class="amount" id="total-amount">R$ 0,00</div>
+                </div>
+                <div class="summary-card purchased">
+                  <h3>Já Comprado</h3>
+                  <div class="amount" id="purchased-amount">R$ 0,00</div>
+                </div>
+                <div class="summary-card pending">
+                  <h3>Pendente</h3>
+                  <div class="amount" id="pending-amount">R$ 0,00</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="accounts-by-room">
+              <h3>Por Cômodo</h3>
+              <div id="room-accounts" class="room-accounts"></div>
+            </div>
+
+            <div class="accounts-by-priority">
+              <h3>Por Prioridade</h3>
+              <div id="priority-accounts" class="priority-accounts"></div>
+            </div>
           </div>
         </section>
       </main>
@@ -158,7 +207,7 @@
 
     <!-- Modal de Item -->
     <div id="item-modal" class="modal">
-      <div class="modal-content">
+      <div class="modal-content modal-large">
         <div class="modal-header">
           <h3 id="item-modal-title">Adicionar Item</h3>
           <button class="modal-close">&times;</button>
@@ -169,6 +218,7 @@
               <label for="item-name">Nome do Item</label>
               <input type="text" id="item-name" required />
             </div>
+
             <div class="form-row">
               <div class="form-group">
                 <label for="item-category">Categoria</label>
@@ -188,6 +238,27 @@
                 </select>
               </div>
             </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="item-priority">Prioridade</label>
+                <select id="item-priority" required>
+                  <option value="">Selecione...</option>
+                  <option value="basico">🔴 Básico</option>
+                  <option value="necessario">🟡 Necessário</option>
+                  <option value="util">🟢 Útil</option>
+                  <option value="luxo">🔵 Luxo</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="item-status">Status</label>
+                <select id="item-status" required>
+                  <option value="pendente">⏳ Pendente</option>
+                  <option value="comprado">✅ Comprado</option>
+                </select>
+              </div>
+            </div>
+
             <div class="form-row">
               <div class="form-group">
                 <label for="item-width">Largura (cm)</label>
@@ -198,18 +269,58 @@
                 <input type="number" id="item-height" min="1" max="1000" />
               </div>
             </div>
+
             <div class="form-group">
               <label for="item-price">Preço (R$)</label>
               <input type="number" id="item-price" min="0" step="0.01" />
             </div>
+
             <div class="form-group">
-              <label for="item-link">Link de Compra</label>
-              <input type="url" id="item-link" placeholder="https://..." />
+              <label for="item-icon">Ícone</label>
+              <div class="icon-selector">
+                <button type="button" id="selected-icon" class="icon-button">
+                  <i class="fas fa-cube"></i>
+                </button>
+                <button
+                  type="button"
+                  id="choose-icon-btn"
+                  class="btn btn-outline"
+                >
+                  Escolher Ícone
+                </button>
+              </div>
+              <input type="hidden" id="item-icon" value="fas fa-cube" />
             </div>
+
+            <div class="form-group">
+              <label>Links de Compra</label>
+              <div id="purchase-links" class="purchase-links">
+                <div class="link-group">
+                  <input
+                    type="url"
+                    placeholder="https://..."
+                    class="purchase-link-input"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Nome da loja (opcional)"
+                    class="store-name-input"
+                  />
+                  <button type="button" class="btn btn-danger remove-link">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+              <button type="button" id="add-link-btn" class="btn btn-outline">
+                <i class="fas fa-plus"></i> Adicionar Link
+              </button>
+            </div>
+
             <div class="form-group">
               <label for="item-description">Descrição</label>
               <textarea id="item-description" rows="3"></textarea>
             </div>
+
             <div class="form-group">
               <label for="item-image">Imagem</label>
               <input type="file" id="item-image" accept="image/*" />
@@ -223,6 +334,41 @@
           </button>
           <button type="submit" form="item-form" class="btn btn-primary">
             Salvar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Seleção de Ícone -->
+    <div id="icon-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Escolher Ícone</h3>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="icon-categories">
+            <button class="icon-category-btn active" data-category="furniture">
+              Móveis
+            </button>
+            <button class="icon-category-btn" data-category="appliances">
+              Eletrodomésticos
+            </button>
+            <button class="icon-category-btn" data-category="kitchen">
+              Cozinha
+            </button>
+            <button class="icon-category-btn" data-category="decoration">
+              Decoração
+            </button>
+            <button class="icon-category-btn" data-category="general">
+              Geral
+            </button>
+          </div>
+          <div id="icon-grid" class="icon-grid"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancel-icon">
+            Cancelar
           </button>
         </div>
       </div>

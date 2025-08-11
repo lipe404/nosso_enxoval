@@ -158,5 +158,18 @@ def list_projects():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
+@app.route('/projects/<filename>')
+def serve_project(filename):
+    try:
+        filepath = os.path.join('projects', filename)
+        if os.path.exists(filepath):
+            with open(filepath, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        else:
+            return jsonify({'success': False, 'error': 'Arquivo não encontrado'}), 404
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

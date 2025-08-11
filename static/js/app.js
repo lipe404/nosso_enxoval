@@ -7,6 +7,61 @@ class EnxovalApp {
     this.currentView = "floor-plan";
     this.projectName = "";
     this.scale = 10; // pixels per cm
+    this.selectedIcon = "fas fa-cube";
+
+    // Icon categories
+    this.iconCategories = {
+      furniture: [
+        "fas fa-couch",
+        "fas fa-bed",
+        "fas fa-chair",
+        "fas fa-table",
+        "fas fa-desk",
+        "fas fa-dresser",
+        "fas fa-bookshelf",
+        "fas fa-wardrobe",
+      ],
+      appliances: [
+        "fas fa-tv",
+        "fas fa-microwave",
+        "fas fa-blender",
+        "fas fa-coffee-maker",
+        "fas fa-washing-machine",
+        "fas fa-refrigerator",
+        "fas fa-oven",
+        "fas fa-dishwasher",
+      ],
+      kitchen: [
+        "fas fa-utensils",
+        "fas fa-plate",
+        "fas fa-glass",
+        "fas fa-mug",
+        "fas fa-wine-glass",
+        "fas fa-cocktail",
+        "fas fa-pot",
+        "fas fa-pan",
+      ],
+      decoration: [
+        "fas fa-picture-frame",
+        "fas fa-lamp",
+        "fas fa-candle",
+        "fas fa-flower",
+        "fas fa-mirror",
+        "fas fa-clock",
+        "fas fa-trophy",
+        "fas fa-star",
+      ],
+      general: [
+        "fas fa-cube",
+        "fas fa-box",
+        "fas fa-gift",
+        "fas fa-heart",
+        "fas fa-home",
+        "fas fa-key",
+        "fas fa-tools",
+        "fas fa-cog",
+      ],
+    };
 
     this.init();
   }
@@ -45,6 +100,9 @@ class EnxovalApp {
     document
       .getElementById("list-view")
       .addEventListener("click", () => this.switchView("list"));
+    document
+      .getElementById("accounts-view")
+      .addEventListener("click", () => this.switchView("accounts"));
 
     // Filters
     document
@@ -52,6 +110,12 @@ class EnxovalApp {
       .addEventListener("change", () => this.filterItems());
     document
       .getElementById("room-filter")
+      .addEventListener("change", () => this.filterItems());
+    document
+      .getElementById("priority-filter")
+      .addEventListener("change", () => this.filterItems());
+    document
+      .getElementById("status-filter")
       .addEventListener("change", () => this.filterItems());
 
     // Room modal
@@ -73,6 +137,19 @@ class EnxovalApp {
       .getElementById("item-image")
       .addEventListener("change", (e) => this.previewImage(e));
 
+    // Icon selection
+    document
+      .getElementById("choose-icon-btn")
+      .addEventListener("click", () => this.showIconModal());
+    document
+      .getElementById("cancel-icon")
+      .addEventListener("click", () => this.hideIconModal());
+
+    // Purchase links
+    document
+      .getElementById("add-link-btn")
+      .addEventListener("click", () => this.addPurchaseLink());
+
     // Load modal
     document
       .getElementById("load-file-btn")
@@ -92,6 +169,131 @@ class EnxovalApp {
           modal.style.display = "none";
         }
       });
+    });
+  }
+
+  // Icon Management
+  showIconModal() {
+    document.getElementById("icon-modal").style.display = "block";
+    this.renderIconCategories();
+    this.renderIconGrid("furniture");
+  }
+
+  hideIconModal() {
+    document.getElementById("icon-modal").style.display = "none";
+  }
+
+  renderIconCategories() {
+    const container = document.querySelector(".icon-categories");
+    container.innerHTML = "";
+
+    const categories = {
+      furniture: "Móveis",
+      appliances: "Eletrodomésticos",
+      kitchen: "Cozinha",
+      decoration: "Decoração",
+      general: "Geral",
+    };
+
+    Object.entries(categories).forEach(([key, name]) => {
+      const btn = document.createElement("button");
+      btn.className = "icon-category-btn";
+      btn.dataset.category = key;
+      btn.textContent = name;
+      btn.addEventListener("click", () => {
+        document
+          .querySelectorAll(".icon-category-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        this.renderIconGrid(key);
+      });
+      container.appendChild(btn);
+    });
+
+    container.firstChild.classList.add("active");
+  }
+
+  renderIconGrid(category) {
+    const container = document.getElementById("icon-grid");
+    container.innerHTML = "";
+
+    this.iconCategories[category].forEach((iconClass) => {
+      const iconEl = document.createElement("div");
+      iconEl.className = "icon-option";
+      iconEl.innerHTML = `<i class="${iconClass}"></i>`;
+      iconEl.addEventListener("click", () => {
+        this.selectedIcon = iconClass;
+        document.getElementById(
+          "selected-icon"
+        ).innerHTML = `<i class="${iconClass}"></i>`;
+        document.getElementById("item-icon").value = iconClass;
+        this.hideIconModal();
+      });
+      container.appendChild(iconEl);
+    });
+  }
+
+  // Purchase Links Management
+  addPurchaseLink() {
+    const container = document.getElementById("purchase-links");
+    const linkGroup = document.createElement("div");
+    linkGroup.className = "link-group";
+    linkGroup.innerHTML = `
+      <input type="url" placeholder="https://..." class="purchase-link-input" />
+      <input type="text" placeholder="Nome da loja (opcional)" class="store-name-input" />
+      <button type="button" class="btn btn-danger remove-link">
+        <i class="fas fa-trash"></i>
+      </button>
+    `;
+
+    linkGroup.querySelector(".remove-link").addEventListener("click", () => {
+      linkGroup.remove();
+    });
+
+    container.appendChild(linkGroup);
+  }
+
+  getPurchaseLinks() {
+    const links = [];
+    document.querySelectorAll(".link-group").forEach((group) => {
+      const url = group.querySelector(".purchase-link-input").value;
+      const store = group.querySelector(".store-name-input").value;
+      if (url) {
+        links.push({ url, store: store || "Link" });
+      }
+    });
+    return links;
+  }
+
+  setPurchaseLinks(links) {
+    const container = document.getElementById("purchase-links");
+    container.innerHTML = "";
+
+    if (!links || links.length === 0) {
+      this.addPurchaseLink();
+      return;
+    }
+
+    links.forEach((link) => {
+      const linkGroup = document.createElement("div");
+      linkGroup.className = "link-group";
+      linkGroup.innerHTML = `
+        <input type="url" placeholder="https://..." class="purchase-link-input" value="${
+          link.url
+        }" />
+        <input type="text" placeholder="Nome da loja (opcional)" class="store-name-input" value="${
+          link.store || ""
+        }" />
+        <button type="button" class="btn btn-danger remove-link">
+          <i class="fas fa-trash"></i>
+        </button>
+      `;
+
+      linkGroup.querySelector(".remove-link").addEventListener("click", () => {
+        linkGroup.remove();
+      });
+
+      container.appendChild(linkGroup);
     });
   }
 
@@ -171,12 +373,12 @@ class EnxovalApp {
           const projectEl = document.createElement("div");
           projectEl.className = "saved-project";
           projectEl.innerHTML = `
-                        <h5>${project.name}</h5>
-                        <p>Criado em: ${new Date(
-                          project.created_at
-                        ).toLocaleString("pt-BR")}</p>
-                        <p>Tamanho: ${(project.size / 1024).toFixed(1)} KB</p>
-                    `;
+            <h5>${project.name}</h5>
+            <p>Criado em: ${new Date(project.created_at).toLocaleString(
+              "pt-BR"
+            )}</p>
+            <p>Tamanho: ${(project.size / 1024).toFixed(1)} KB</p>
+          `;
           projectEl.addEventListener("click", () =>
             this.loadSavedProject(project.filename)
           );
@@ -249,6 +451,17 @@ class EnxovalApp {
       this.currentView = data.settings.currentView || "floor-plan";
     }
 
+    // Migrate old items to new format
+    this.items = this.items.map((item) => ({
+      ...item,
+      priority: item.priority || "necessario",
+      status: item.status || "pendente",
+      icon: item.icon || "fas fa-cube",
+      purchaseLinks:
+        item.purchaseLinks ||
+        (item.link ? [{ url: item.link, store: "Link" }] : []),
+    }));
+
     this.selectedRoom = null;
     this.selectedItem = null;
     this.renderAll();
@@ -295,16 +508,13 @@ class EnxovalApp {
     };
 
     if (form.dataset.roomId) {
-      // Edit existing room
       const index = this.rooms.findIndex((r) => r.id === form.dataset.roomId);
       if (index !== -1) {
-        // Preserve position
         roomData.x = this.rooms[index].x;
         roomData.y = this.rooms[index].y;
         this.rooms[index] = roomData;
       }
     } else {
-      // Add new room
       this.rooms.push(roomData);
     }
 
@@ -337,7 +547,6 @@ class EnxovalApp {
     const title = document.getElementById("item-modal-title");
     const form = document.getElementById("item-form");
 
-    // Update room options
     this.updateItemRoomOptions();
 
     if (item) {
@@ -345,12 +554,24 @@ class EnxovalApp {
       document.getElementById("item-name").value = item.name;
       document.getElementById("item-category").value = item.category;
       document.getElementById("item-room").value = item.roomId;
+      document.getElementById("item-priority").value =
+        item.priority || "necessario";
+      document.getElementById("item-status").value = item.status || "pendente";
       document.getElementById("item-width").value = item.width || "";
       document.getElementById("item-height").value = item.height || "";
       document.getElementById("item-price").value = item.price || "";
-      document.getElementById("item-link").value = item.link || "";
       document.getElementById("item-description").value =
         item.description || "";
+
+      // Set icon
+      const iconClass = item.icon || "fas fa-cube";
+      document.getElementById(
+        "selected-icon"
+      ).innerHTML = `<i class="${iconClass}"></i>`;
+      document.getElementById("item-icon").value = iconClass;
+
+      // Set purchase links
+      this.setPurchaseLinks(item.purchaseLinks || []);
 
       if (item.image) {
         this.showImagePreview(item.image);
@@ -361,9 +582,12 @@ class EnxovalApp {
       title.textContent = "Adicionar Item";
       form.reset();
       document.getElementById("image-preview").innerHTML = "";
+      document.getElementById("selected-icon").innerHTML =
+        '<i class="fas fa-cube"></i>';
+      document.getElementById("item-icon").value = "fas fa-cube";
+      this.setPurchaseLinks([]);
       delete form.dataset.itemId;
 
-      // Pre-select current room if any
       if (this.selectedRoom) {
         document.getElementById("item-room").value = this.selectedRoom.id;
       }
@@ -395,12 +619,10 @@ class EnxovalApp {
     const fileInput = document.getElementById("item-image");
     let imageUrl = "";
 
-    // Upload image if selected
     if (fileInput.files[0]) {
       imageUrl = await this.uploadImage(fileInput.files[0]);
-      if (!imageUrl) return; // Upload failed
+      if (!imageUrl) return;
     } else if (form.dataset.itemId) {
-      // Keep existing image for edits
       const existingItem = this.items.find((i) => i.id === form.dataset.itemId);
       imageUrl = existingItem ? existingItem.image : "";
     }
@@ -410,27 +632,27 @@ class EnxovalApp {
       name: document.getElementById("item-name").value,
       category: document.getElementById("item-category").value,
       roomId: document.getElementById("item-room").value,
+      priority: document.getElementById("item-priority").value,
+      status: document.getElementById("item-status").value,
       width: parseFloat(document.getElementById("item-width").value) || 50,
       height: parseFloat(document.getElementById("item-height").value) || 50,
       price: parseFloat(document.getElementById("item-price").value) || 0,
-      link: document.getElementById("item-link").value,
       description: document.getElementById("item-description").value,
       image: imageUrl,
+      icon: document.getElementById("item-icon").value,
+      purchaseLinks: this.getPurchaseLinks(),
       x: 10,
       y: 10,
     };
 
     if (form.dataset.itemId) {
-      // Edit existing item
       const index = this.items.findIndex((i) => i.id === form.dataset.itemId);
       if (index !== -1) {
-        // Preserve position
         itemData.x = this.items[index].x;
         itemData.y = this.items[index].y;
         this.items[index] = itemData;
       }
     } else {
-      // Add new item
       this.items.push(itemData);
     }
 
@@ -508,9 +730,13 @@ class EnxovalApp {
       view === "floor-plan" ? "block" : "none";
     document.getElementById("list-container").style.display =
       view === "list" ? "block" : "none";
+    document.getElementById("accounts-container").style.display =
+      view === "accounts" ? "block" : "none";
 
     if (view === "list") {
       this.renderItemsGrid();
+    } else if (view === "accounts") {
+      this.renderAccountsView();
     }
   }
 
@@ -518,11 +744,23 @@ class EnxovalApp {
   filterItems() {
     const categoryFilter = document.getElementById("category-filter").value;
     const roomFilter = document.getElementById("room-filter").value;
+    const priorityFilter = document.getElementById("priority-filter").value;
+    const statusFilter = document.getElementById("status-filter").value;
 
-    this.renderItemsList(categoryFilter, roomFilter);
+    this.renderItemsList(
+      categoryFilter,
+      roomFilter,
+      priorityFilter,
+      statusFilter
+    );
 
     if (this.currentView === "list") {
-      this.renderItemsGrid(categoryFilter, roomFilter);
+      this.renderItemsGrid(
+        categoryFilter,
+        roomFilter,
+        priorityFilter,
+        statusFilter
+      );
     }
   }
 
@@ -538,6 +776,151 @@ class EnxovalApp {
     });
   }
 
+  // Accounts View
+  renderAccountsView() {
+    this.calculateFinancialSummary();
+    this.renderRoomAccounts();
+    this.renderPriorityAccounts();
+  }
+
+  calculateFinancialSummary() {
+    const total = this.items.reduce((sum, item) => sum + (item.price || 0), 0);
+    const purchased = this.items
+      .filter((item) => item.status === "comprado")
+      .reduce((sum, item) => sum + (item.price || 0), 0);
+    const pending = total - purchased;
+
+    document.getElementById("total-amount").textContent = `R$ ${total.toFixed(
+      2
+    )}`;
+    document.getElementById(
+      "purchased-amount"
+    ).textContent = `R$ ${purchased.toFixed(2)}`;
+    document.getElementById(
+      "pending-amount"
+    ).textContent = `R$ ${pending.toFixed(2)}`;
+  }
+
+  renderRoomAccounts() {
+    const container = document.getElementById("room-accounts");
+    container.innerHTML = "";
+
+    const roomTotals = {};
+
+    this.rooms.forEach((room) => {
+      roomTotals[room.id] = {
+        name: room.name,
+        total: 0,
+        purchased: 0,
+        pending: 0,
+        itemCount: 0,
+      };
+    });
+
+    this.items.forEach((item) => {
+      if (roomTotals[item.roomId]) {
+        const price = item.price || 0;
+        roomTotals[item.roomId].total += price;
+        roomTotals[item.roomId].itemCount++;
+
+        if (item.status === "comprado") {
+          roomTotals[item.roomId].purchased += price;
+        } else {
+          roomTotals[item.roomId].pending += price;
+        }
+      }
+    });
+
+    Object.values(roomTotals).forEach((room) => {
+      if (room.itemCount > 0) {
+        const roomEl = document.createElement("div");
+        roomEl.className = "account-item";
+        roomEl.innerHTML = `
+          <div class="account-item-header">
+            <h4>${room.name}</h4>
+            <span class="account-amount">R$ ${room.total.toFixed(2)}</span>
+          </div>
+          <div class="account-details">
+            ${room.itemCount} itens • 
+            Comprado: R$ ${room.purchased.toFixed(2)} • 
+            Pendente: R$ ${room.pending.toFixed(2)}
+          </div>
+        `;
+        container.appendChild(roomEl);
+      }
+    });
+  }
+
+  renderPriorityAccounts() {
+    const container = document.getElementById("priority-accounts");
+    container.innerHTML = "";
+
+    const priorityTotals = {
+      basico: {
+        name: "🔴 Básico",
+        total: 0,
+        purchased: 0,
+        pending: 0,
+        itemCount: 0,
+      },
+      necessario: {
+        name: "🟡 Necessário",
+        total: 0,
+        purchased: 0,
+        pending: 0,
+        itemCount: 0,
+      },
+      util: {
+        name: "🟢 Útil",
+        total: 0,
+        purchased: 0,
+        pending: 0,
+        itemCount: 0,
+      },
+      luxo: {
+        name: "🔵 Luxo",
+        total: 0,
+        purchased: 0,
+        pending: 0,
+        itemCount: 0,
+      },
+    };
+
+    this.items.forEach((item) => {
+      const priority = item.priority || "necessario";
+      if (priorityTotals[priority]) {
+        const price = item.price || 0;
+        priorityTotals[priority].total += price;
+        priorityTotals[priority].itemCount++;
+
+        if (item.status === "comprado") {
+          priorityTotals[priority].purchased += price;
+        } else {
+          priorityTotals[priority].pending += price;
+        }
+      }
+    });
+
+    Object.values(priorityTotals).forEach((priority) => {
+      if (priority.itemCount > 0) {
+        const priorityEl = document.createElement("div");
+        priorityEl.className = "account-item";
+        priorityEl.innerHTML = `
+          <div class="account-item-header">
+            <h4>${priority.name}</h4>
+            <span class="account-amount">R$ ${priority.total.toFixed(2)}</span>
+          </div>
+          <div class="account-details">
+            ${priority.itemCount} itens • 
+            Comprado: R$ ${priority.purchased.toFixed(2)} • 
+            Pendente: R$ ${priority.pending.toFixed(2)}
+          </div>
+        `;
+        container.appendChild(priorityEl);
+      }
+    });
+  }
+
   // Rendering
   renderAll() {
     this.renderRoomsList();
@@ -547,6 +930,8 @@ class EnxovalApp {
 
     if (this.currentView === "list") {
       this.renderItemsGrid();
+    } else if (this.currentView === "accounts") {
+      this.renderAccountsView();
     }
   }
 
@@ -562,17 +947,17 @@ class EnxovalApp {
       }
 
       roomEl.innerHTML = `
-                <h4>${room.name}</h4>
-                <p>${room.width}m × ${room.height}m</p>
-                <div class="item-actions">
-                    <button class="btn btn-outline btn-edit" data-room-id="${room.id}">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-danger btn-delete" data-room-id="${room.id}">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            `;
+        <h4>${room.name}</h4>
+        <p>${room.width}m × ${room.height}m</p>
+        <div class="item-actions">
+          <button class="btn btn-outline btn-edit" data-room-id="${room.id}">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="btn btn-danger btn-delete" data-room-id="${room.id}">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      `;
 
       roomEl.addEventListener("click", (e) => {
         if (!e.target.closest(".item-actions")) {
@@ -594,7 +979,12 @@ class EnxovalApp {
     });
   }
 
-  renderItemsList(categoryFilter = "", roomFilter = "") {
+  renderItemsList(
+    categoryFilter = "",
+    roomFilter = "",
+    priorityFilter = "",
+    statusFilter = ""
+  ) {
     const container = document.getElementById("items-list");
     container.innerHTML = "";
 
@@ -612,41 +1002,50 @@ class EnxovalApp {
       );
     }
 
+    if (priorityFilter) {
+      filteredItems = filteredItems.filter(
+        (item) => item.priority === priorityFilter
+      );
+    }
+
+    if (statusFilter) {
+      filteredItems = filteredItems.filter(
+        (item) => item.status === statusFilter
+      );
+    }
+
     filteredItems.forEach((item) => {
       const room = this.rooms.find((r) => r.id === item.roomId);
       const itemEl = document.createElement("div");
       itemEl.className = "item-item";
 
+      const priorityBadge = this.getPriorityBadge(item.priority);
+      const statusBadge = this.getStatusBadge(item.status);
+
       itemEl.innerHTML = `
-                <h4>${item.name}</h4>
-                <p>${this.getCategoryName(item.category)} - ${
+        <h4>${item.name}</h4>
+        <p>${this.getCategoryName(item.category)} - ${
         room ? room.name : "Sem cômodo"
       }</p>
-                ${
-                  item.price
-                    ? `<p class="item-price">R$ ${item.price.toFixed(2)}</p>`
-                    : ""
-                }
-                <div class="item-actions">
-                    <button class="btn btn-outline btn-edit" data-item-id="${
-                      item.id
-                    }">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-danger btn-delete" data-item-id="${
-                      item.id
-                    }">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                    ${
-                      item.link
-                        ? `<a href="${item.link}"  class="btn btn-info">
-                        <i class="fas fa-external-link-alt"></i>
-                    </a>`
-                        : ""
-                    }
-                </div>
-            `;
+        <div class="mb-1">
+          ${priorityBadge}
+          ${statusBadge}
+        </div>
+        ${
+          item.price
+            ? `<p class="item-price">R$ ${item.price.toFixed(2)}</p>`
+            : ""
+        }
+        <div class="item-actions">
+          <button class="btn btn-outline btn-edit" data-item-id="${item.id}">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="btn btn-danger btn-delete" data-item-id="${item.id}">
+            <i class="fas fa-trash"></i>
+          </button>
+          ${this.renderPurchaseLinksButtons(item.purchaseLinks)}
+        </div>
+      `;
 
       itemEl.addEventListener("click", (e) => {
         if (!e.target.closest(".item-actions")) {
@@ -668,24 +1067,34 @@ class EnxovalApp {
     });
   }
 
+  renderPurchaseLinksButtons(links) {
+    if (!links || links.length === 0) return "";
+
+    return links
+      .map(
+        (link) =>
+          `<a href="${link.url}"  class="btn btn-info" title="${link.store}">
+        <i class="fas fa-external-link-alt"></i>
+      </a>`
+      )
+      .join("");
+  }
+
   renderFloorPlan() {
     const container = document.getElementById("floor-plan");
-
-    // Clear existing content
     container.innerHTML = "";
 
     if (this.rooms.length === 0) {
       container.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-home"></i>
-                    <h3>Comece criando um cômodo</h3>
-                    <p>Adicione cômodos para começar a planejar seu enxoval</p>
-                </div>
-            `;
+        <div class="empty-state">
+          <i class="fas fa-home"></i>
+          <h3>Comece criando um cômodo</h3>
+          <p>Adicione cômodos para começar a planejar seu enxoval</p>
+        </div>
+      `;
       return;
     }
 
-    // Render rooms
     this.rooms.forEach((room) => {
       this.renderRoom(room, container);
     });
@@ -700,7 +1109,6 @@ class EnxovalApp {
       roomEl.classList.add("selected");
     }
 
-    // Calculate size in pixels
     const widthPx = room.width * this.scale;
     const heightPx = room.height * this.scale;
 
@@ -711,11 +1119,10 @@ class EnxovalApp {
     roomEl.style.backgroundColor = room.color;
 
     roomEl.innerHTML = `
-            <div class="room-title">${room.name}</div>
-            <div class="room-dimensions">${room.width}m × ${room.height}m</div>
-        `;
+      <div class="room-title">${room.name}</div>
+      <div class="room-dimensions">${room.width}m × ${room.height}m</div>
+    `;
 
-    // Make room draggable
     this.makeDraggable(roomEl, (x, y) => {
       room.x = x;
       room.y = y;
@@ -728,7 +1135,6 @@ class EnxovalApp {
 
     container.appendChild(roomEl);
 
-    // Render items in this room
     this.items
       .filter((item) => item.roomId === room.id)
       .forEach((item) => {
@@ -738,31 +1144,38 @@ class EnxovalApp {
 
   renderItem(item, roomEl) {
     const itemEl = document.createElement("div");
-    itemEl.className = "item-element";
+    itemEl.className = `item-element priority-${
+      item.priority || "necessario"
+    } status-${item.status || "pendente"}`;
     itemEl.dataset.itemId = item.id;
 
     if (this.selectedItem && this.selectedItem.id === item.id) {
       itemEl.classList.add("selected");
     }
 
-    // Calculate size in pixels (items are in cm)
-    const widthPx = (item.width / 100) * this.scale;
-    const heightPx = (item.height / 100) * this.scale;
+    const widthPx = Math.max(30, (item.width / 100) * this.scale);
+    const heightPx = Math.max(30, (item.height / 100) * this.scale);
 
     itemEl.style.left = `${item.x}px`;
     itemEl.style.top = `${item.y}px`;
     itemEl.style.width = `${widthPx}px`;
     itemEl.style.height = `${heightPx}px`;
 
-    // Truncate name if too long
-    const displayName =
-      item.name.length > 10 ? item.name.substring(0, 10) + "..." : item.name;
-    itemEl.textContent = displayName;
-    itemEl.title = item.name;
+    // Use icon if available, otherwise use text
+    if (item.icon && widthPx >= 30 && heightPx >= 30) {
+      itemEl.innerHTML = `<i class="${item.icon}"></i>`;
+      itemEl.classList.add("item-element-icon");
+    } else {
+      const displayName =
+        item.name.length > 10 ? item.name.substring(0, 10) + "..." : item.name;
+      itemEl.textContent = displayName;
+    }
 
-    // Make item draggable within room
+    itemEl.title = `${item.name} (${this.getPriorityName(
+      item.priority
+    )} - ${this.getStatusName(item.status)})`;
+
     this.makeDraggable(itemEl, (x, y) => {
-      // Constrain to room bounds
       const roomRect = roomEl.getBoundingClientRect();
       const itemRect = itemEl.getBoundingClientRect();
 
@@ -784,7 +1197,12 @@ class EnxovalApp {
     roomEl.appendChild(itemEl);
   }
 
-  renderItemsGrid(categoryFilter = "", roomFilter = "") {
+  renderItemsGrid(
+    categoryFilter = "",
+    roomFilter = "",
+    priorityFilter = "",
+    statusFilter = ""
+  ) {
     const container = document.getElementById("items-grid");
     container.innerHTML = "";
 
@@ -802,65 +1220,73 @@ class EnxovalApp {
       );
     }
 
+    if (priorityFilter) {
+      filteredItems = filteredItems.filter(
+        (item) => item.priority === priorityFilter
+      );
+    }
+
+    if (statusFilter) {
+      filteredItems = filteredItems.filter(
+        (item) => item.status === statusFilter
+      );
+    }
+
     filteredItems.forEach((item) => {
       const room = this.rooms.find((r) => r.id === item.roomId);
       const cardEl = document.createElement("div");
       cardEl.className = "item-card";
 
+      const priorityBadge = this.getPriorityBadge(item.priority);
+      const statusBadge = this.getStatusBadge(item.status);
+      const purchaseLinksHtml = this.renderPurchaseLinksInCard(
+        item.purchaseLinks
+      );
+
       cardEl.innerHTML = `
-                <div class="item-card-header">
-                    <h3>${item.name}</h3>
-                    <span class="item-category">${this.getCategoryName(
-                      item.category
-                    )}</span>
-                </div>
-                ${
-                  item.image
-                    ? `<img src="${item.image}" alt="${item.name}" class="item-image">`
-                    : ""
-                }
-                <div class="item-details">
-                    <p><strong>Cômodo:</strong> ${
-                      room ? room.name : "Não definido"
-                    }</p>
-                    ${
-                      item.width && item.height
-                        ? `<p><strong>Dimensões:</strong> ${item.width}cm × ${item.height}cm</p>`
-                        : ""
-                    }
-                    ${
-                      item.description
-                        ? `<p><strong>Descrição:</strong> ${item.description}</p>`
-                        : ""
-                    }
-                    ${
-                      item.price
-                        ? `<div class="item-price">R$ ${item.price.toFixed(
-                            2
-                          )}</div>`
-                        : ""
-                    }
-                </div>
-                <div class="item-actions">
-                    <button class="btn btn-outline btn-edit" data-item-id="${
-                      item.id
-                    }">
-                        <i class="fas fa-edit"></i> Editar
-                    </button>
-                    <button class="btn btn-danger btn-delete" data-item-id="${
-                      item.id
-                    }">
-                        <i class="fas fa-trash"></i> Excluir
-                    </button>
-                    ${
-                      item.link
-                        ? `<a href="${item.link}"  class="btn btn-info">
-                        <i class="fas fa-external-link-alt"></i> Comprar
-                    </a>`
-                        : ""
-                    }
-                </div>
-            `;
+        <div class="item-card-header">
+          <h3>${item.name}</h3>
+          <span class="item-category">${this.getCategoryName(
+            item.category
+          )}</span>
+        </div>
+        <div class="mb-1">
+          ${priorityBadge}
+          ${statusBadge}
+        </div>
+        ${
+          item.image
+            ? `<img src="${item.image}" alt="${item.name}" class="item-image">`
+            : ""
+        }
+        <div class="item-details">
+          <p><strong>Cômodo:</strong> ${room ? room.name : "Não definido"}</p>
+          ${
+            item.width && item.height
+              ? `<p><strong>Dimensões:</strong> ${item.width}cm × ${item.height}cm</p>`
+              : ""
+          }
+          ${
+            item.description
+              ? `<p><strong>Descrição:</strong> ${item.description}</p>`
+              : ""
+          }
+          ${
+            item.price
+              ? `<div class="item-price">R$ ${item.price.toFixed(2)}</div>`
+              : ""
+          }
+        </div>
+        <div class="item-actions">
+          <button class="btn btn-outline btn-edit" data-item-id="${item.id}">
+            <i class="fas fa-edit"></i> Editar
+          </button>
+          <button class="btn btn-danger btn-delete" data-item-id="${item.id}">
+            <i class="fas fa-trash"></i> Excluir
+          </button>
+          ${purchaseLinksHtml}
+        </div>
+      `;
 
       cardEl.querySelector(".btn-edit").addEventListener("click", () => {
         this.showItemModal(item);
@@ -872,6 +1298,19 @@ class EnxovalApp {
 
       container.appendChild(cardEl);
     });
+  }
+
+  renderPurchaseLinksInCard(links) {
+    if (!links || links.length === 0) return "";
+
+    return links
+      .map(
+        (link) =>
+          `<a href="${link.url}"  class="btn btn-info" title="Comprar em ${link.store}">
+        <i class="fas fa-external-link-alt"></i> ${link.store}
+      </a>`
+      )
+      .join("");
   }
 
   // Selection
@@ -925,7 +1364,44 @@ class EnxovalApp {
     element.style.cursor = "move";
   }
 
-  // Utilities
+  // Utility Methods
+  getPriorityBadge(priority) {
+    const badges = {
+      basico: '<span class="priority-badge priority-basico">🔴 Básico</span>',
+      necessario:
+        '<span class="priority-badge priority-necessario">🟡 Necessário</span>',
+      util: '<span class="priority-badge priority-util">🟢 Útil</span>',
+      luxo: '<span class="priority-badge priority-luxo">🔵 Luxo</span>',
+    };
+    return badges[priority] || badges.necessario;
+  }
+
+  getStatusBadge(status) {
+    const badges = {
+      comprado: '<span class="status-badge status-comprado">✅ Comprado</span>',
+      pendente: '<span class="status-badge status-pendente">⏳ Pendente</span>',
+    };
+    return badges[status] || badges.pendente;
+  }
+
+  getPriorityName(priority) {
+    const names = {
+      basico: "Básico",
+      necessario: "Necessário",
+      util: "Útil",
+      luxo: "Luxo",
+    };
+    return names[priority] || "Necessário";
+  }
+
+  getStatusName(status) {
+    const names = {
+      comprado: "Comprado",
+      pendente: "Pendente",
+    };
+    return names[status] || "Pendente";
+  }
+
   generateId() {
     return "id_" + Math.random().toString(36).substr(2, 9);
   }
