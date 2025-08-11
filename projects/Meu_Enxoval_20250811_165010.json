@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "name": "Meu Enxoval",
+    "created_at": "2025-08-11T16:50:10.498264",
+    "version": "1.0"
+  },
+  "data": {
+    "project_name": "Meu Enxoval",
+    "rooms": [
+      {
+        "id": "id_1cr0mciyh",
+        "name": "Quarto",
+        "width": 20,
+        "height": 20,
+        "color": "#ff0080",
+        "x": 57,
+        "y": 79
+      },
+      {
+        "id": "id_l3f9h08hf",
+        "name": "Cozinha",
+        "width": 20,
+        "height": 20,
+        "color": "#ff8000",
+        "x": 315,
+        "y": 69
+      }
+    ],
+    "items": [
+      {
+        "id": "id_suxcnouwc",
+        "name": "Cama",
+        "category": "moveis",
+        "roomId": "id_1cr0mciyh",
+        "width": 2,
+        "height": 2,
+        "price": 1200,
+        "link": "https://www.magazineluiza.com.br/cama-box-casal-ortobom-conjugado-43x138x188cm-physical-blue/p/124354700/co/cmbx/?&seller_id=magazineluiza&utm_source=google&utm_medium=cpc&utm_term=80483&utm_campaign=google_eco_per_ven_pla_mo_apo_1p_moveis-csp-controle&utm_content=&partner_id=80483&gclsrc=aw.ds&gad_source=1&gad_campaignid=22804849178&gclid=Cj0KCQjwqebEBhD9ARIsAFZMbfyQOVAAxqLZdDZq-Z9HARMksoWvYPzNb0I3IACJYj1Bw1Xu2UtMAywaAqB_EALw_wcB",
+        "description": "Cama de casal",
+        "image": "/static/uploads/images/df4c0f9e0b2d4b9280d3ee6dd95e8fd2_cama.jpg",
+        "x": 175,
+        "y": 46
+      }
+    ],
+    "settings": {
+      "scale": 10,
+      "currentView": "floor-plan"
+    }
+  }
+}

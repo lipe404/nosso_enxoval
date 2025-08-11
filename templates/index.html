@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nosso Enxoval - Planejamento de Casamento</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='static/upload/images/icon/fav.png') }}"
+    />
+  </head>
+  <body>
+    <div id="app">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-content">
+          <h1><i class="fas fa-heart"></i> Nosso Enxoval</h1>
+          <div class="header-actions">
+            <button id="new-project-btn" class="btn btn-primary">
+              <i class="fas fa-plus"></i> Novo Projeto
+            </button>
+            <button id="save-project-btn" class="btn btn-success">
+              <i class="fas fa-save"></i> Salvar
+            </button>
+            <button id="load-project-btn" class="btn btn-info">
+              <i class="fas fa-folder-open"></i> Carregar
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+          <div class="sidebar-section">
+            <h3><i class="fas fa-home"></i> Cômodos</h3>
+            <button id="add-room-btn" class="btn btn-outline">
+              <i class="fas fa-plus"></i> Adicionar Cômodo
+            </button>
+            <div id="rooms-list" class="rooms-list"></div>
+          </div>
+
+          <div class="sidebar-section">
+            <h3><i class="fas fa-couch"></i> Itens</h3>
+            <button id="add-item-btn" class="btn btn-outline">
+              <i class="fas fa-plus"></i> Adicionar Item
+            </button>
+            <div class="filter-section">
+              <select id="category-filter">
+                <option value="">Todas as categorias</option>
+                <option value="moveis">Móveis</option>
+                <option value="eletrodomesticos">Eletrodomésticos</option>
+                <option value="utensilios">Utensílios</option>
+                <option value="decoracao">Decoração</option>
+                <option value="outros">Outros</option>
+              </select>
+              <select id="room-filter">
+                <option value="">Todos os cômodos</option>
+              </select>
+            </div>
+            <div id="items-list" class="items-list"></div>
+          </div>
+        </aside>
+
+        <!-- Main View -->
+        <section class="main-view">
+          <div class="view-controls">
+            <button id="floor-plan-view" class="btn btn-outline active">
+              <i class="fas fa-map"></i> Planta Baixa
+            </button>
+            <button id="list-view" class="btn btn-outline">
+              <i class="fas fa-list"></i> Lista
+            </button>
+          </div>
+
+          <div id="floor-plan-container" class="floor-plan-container">
+            <div id="floor-plan" class="floor-plan">
+              <div class="empty-state">
+                <i class="fas fa-home"></i>
+                <h3>Comece criando um cômodo</h3>
+                <p>Adicione cômodos para começar a planejar seu enxoval</p>
+              </div>
+            </div>
+          </div>
+
+          <div id="list-container" class="list-container" style="display: none">
+            <div id="items-grid" class="items-grid"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Modal de Cômodo -->
+    <div id="room-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="room-modal-title">Adicionar Cômodo</h3>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="room-form">
+            <div class="form-group">
+              <label for="room-name">Nome do Cômodo</label>
+              <input type="text" id="room-name" required />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="room-width">Largura (m)</label>
+                <input
+                  type="number"
+                  id="room-width"
+                  min="1"
+                  max="20"
+                  step="0.1"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="room-height">Altura (m)</label>
+                <input
+                  type="number"
+                  id="room-height"
+                  min="1"
+                  max="20"
+                  step="0.1"
+                  required
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="room-color">Cor do Cômodo</label>
+              <input type="color" id="room-color" value="#e3f2fd" />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancel-room">
+            Cancelar
+          </button>
+          <button type="submit" form="room-form" class="btn btn-primary">
+            Salvar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Item -->
+    <div id="item-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="item-modal-title">Adicionar Item</h3>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="item-form">
+            <div class="form-group">
+              <label for="item-name">Nome do Item</label>
+              <input type="text" id="item-name" required />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="item-category">Categoria</label>
+                <select id="item-category" required>
+                  <option value="">Selecione...</option>
+                  <option value="moveis">Móveis</option>
+                  <option value="eletrodomesticos">Eletrodomésticos</option>
+                  <option value="utensilios">Utensílios</option>
+                  <option value="decoracao">Decoração</option>
+                  <option value="outros">Outros</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="item-room">Cômodo</label>
+                <select id="item-room" required>
+                  <option value="">Selecione...</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="item-width">Largura (cm)</label>
+                <input type="number" id="item-width" min="1" max="1000" />
+              </div>
+              <div class="form-group">
+                <label for="item-height">Altura (cm)</label>
+                <input type="number" id="item-height" min="1" max="1000" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="item-price">Preço (R$)</label>
+              <input type="number" id="item-price" min="0" step="0.01" />
+            </div>
+            <div class="form-group">
+              <label for="item-link">Link de Compra</label>
+              <input type="url" id="item-link" placeholder="https://..." />
+            </div>
+            <div class="form-group">
+              <label for="item-description">Descrição</label>
+              <textarea id="item-description" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="item-image">Imagem</label>
+              <input type="file" id="item-image" accept="image/*" />
+              <div id="image-preview" class="image-preview"></div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancel-item">
+            Cancelar
+          </button>
+          <button type="submit" form="item-form" class="btn btn-primary">
+            Salvar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Carregamento de Projeto -->
+    <div id="load-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Carregar Projeto</h3>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="load-options">
+            <div class="load-option">
+              <h4>Carregar do Arquivo</h4>
+              <input type="file" id="project-file" accept=".json" />
+              <button id="load-file-btn" class="btn btn-primary">
+                Carregar Arquivo
+              </button>
+            </div>
+            <div class="load-option">
+              <h4>Projetos Salvos</h4>
+              <div id="saved-projects" class="saved-projects"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input oculto para salvar projeto -->
+    <input
+      type="file"
+      id="hidden-file-input"
+      style="display: none"
+      accept=".json"
+    />
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  </body>
+</html>
