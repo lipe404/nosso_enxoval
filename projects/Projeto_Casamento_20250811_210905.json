@@ -1,0 +1,120 @@
+{
+  "metadata": {
+    "name": "Projeto Casamento",
+    "created_at": "2025-08-11T21:09:05.169323",
+    "version": "1.0"
+  },
+  "data": {
+    "project_name": "Projeto Casamento",
+    "rooms": [
+      {
+        "id": "id_itdk96762",
+        "name": "Quarto do casal",
+        "width": 34.8,
+        "height": 24.7,
+        "color": "#800000",
+        "x": 47,
+        "y": 79
+      },
+      {
+        "id": "id_fidnoq957",
+        "name": "Cozinha",
+        "width": 34.4,
+        "height": 20,
+        "color": "#00ffff",
+        "x": 45,
+        "y": 75
+      },
+      {
+        "id": "id_grh5osaco",
+        "name": "Sala de Estar",
+        "width": 25.2,
+        "height": 58.8,
+        "color": "#00ff40",
+        "x": 389,
+        "y": -366
+      },
+      {
+        "id": "id_gmo43iw6e",
+        "name": "Banheiro",
+        "width": 34.4,
+        "height": 14.1,
+        "color": "#fde3f2",
+        "x": 48,
+        "y": -514
+      }
+    ],
+    "items": [
+      {
+        "id": "id_udceeqdw2",
+        "name": "Cama de Casal",
+        "category": "moveis",
+        "roomId": "id_itdk96762",
+        "priority": "necessario",
+        "status": "pendente",
+        "width": 10,
+        "height": 10,
+        "price": 1022.91,
+        "description": "",
+        "image": "/static/uploads/images/ddc548fddcc04dfc8e5f0edd025473e8_73578431a92bc93d4f52bb67bff8dc76.webp",
+        "icon": "fas fa-bed",
+        "purchaseLinks": [
+          {
+            "url": "https://www.magazineluiza.com.br/cama-box-casal-box-colchao-plumatex-de-mola-ensacada-53cm-de-altura-turim/p/229899500/co/cmbx/",
+            "store": "Magazine Luiza"
+          }
+        ],
+        "x": 10,
+        "y": 10
+      },
+      {
+        "id": "id_d7rj5aw2a",
+        "name": "Guarda Roupa",
+        "category": "moveis",
+        "roomId": "id_itdk96762",
+        "priority": "necessario",
+        "status": "pendente",
+        "width": 10,
+        "height": 10,
+        "price": 740,
+        "description": "",
+        "image": "/static/uploads/images/68090a8ed24b4d59a786e07a87dfb062_d8004f4ce60b07c7947966210401fcce.webp",
+        "icon": "fas fa-cube",
+        "purchaseLinks": [
+          {
+            "url": "https://www.magazineluiza.com.br/guarda-roupa-com-espelho-4-portas-4-gavetas-araplac-pequim/p/236860700/mo/guro/",
+            "store": "Magazine Luiza"
+          }
+        ],
+        "x": 43,
+        "y": 12
+      },
+      {
+        "id": "id_df8bgxac8",
+        "name": "Geladeira",
+        "category": "eletrodomesticos",
+        "roomId": "id_fidnoq957",
+        "priority": "basico",
+        "status": "pendente",
+        "width": 10,
+        "height": 10,
+        "price": 3000,
+        "description": "",
+        "image": "/static/uploads/images/09b533b73e6f4e6ebdfe68521b2f70f0_9bd3cf67cb270761c0f089ddf1b17a2e.webp",
+        "icon": "fas fa-utensils",
+        "purchaseLinks": [
+          {
+            "url": "https://www.magazineluiza.com.br/geladeira-brastemp-frost-free-duplex-375l-inox-com-compartimento-extrafrio-fresh-zone-brm44hk/p/013085700/ed/refr/",
+            "store": "Link"
+          }
+        ],
+        "x": 10,
+        "y": 10
+      }
+    ],
+    "settings": {
+      "scale": 10,
+      "currentView": "floor-plan"
+    }
+  }
+}

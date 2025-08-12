@@ -110,6 +110,67 @@
           </div>
 
           <div id="list-container" class="list-container" style="display: none">
+            <!-- Barra de Pesquisa e Filtros -->
+            <div class="list-controls">
+              <div class="search-section">
+                <div class="search-input-wrapper">
+                  <i class="fas fa-search search-icon"></i>
+                  <input 
+                    type="text" 
+                    id="search-input" 
+                    placeholder="Pesquisar itens..." 
+                    class="search-input"
+                  />
+                  <button id="clear-search" class="clear-search" style="display: none;">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="list-filters">
+                <select id="list-category-filter">
+                  <option value="">Todas as categorias</option>
+                  <option value="moveis">Móveis</option>
+                  <option value="eletrodomesticos">Eletrodomésticos</option>
+                  <option value="utensilios">Utensílios</option>
+                  <option value="decoracao">Decoração</option>
+                  <option value="outros">Outros</option>
+                </select>
+                
+                <select id="list-room-filter">
+                  <option value="">Todos os cômodos</option>
+                </select>
+                
+                <select id="list-priority-filter">
+                  <option value="">Todas as prioridades</option>
+                  <option value="basico">🔴 Básico</option>
+                  <option value="necessario">🟡 Necessário</option>
+                  <option value="util">🟢 Útil</option>
+                  <option value="luxo">🔵 Luxo</option>
+                </select>
+                
+                <select id="list-status-filter">
+                  <option value="">Todos os status</option>
+                  <option value="comprado">✅ Comprado</option>
+                  <option value="pendente">⏳ Pendente</option>
+                </select>
+                
+                <select id="sort-filter">
+                  <option value="name">Ordenar por Nome</option>
+                  <option value="price-asc">Preço (Menor → Maior)</option>
+                  <option value="price-desc">Preço (Maior → Menor)</option>
+                  <option value="priority">Prioridade</option>
+                  <option value="status">Status</option>
+                  <option value="room">Cômodo</option>
+                </select>
+              </div>
+              
+              <div class="list-stats">
+                <span id="items-count">0 itens encontrados</span>
+                <span id="items-total-value">Total: R$ 0,00</span>
+              </div>
+            </div>
+            
             <div id="items-grid" class="items-grid"></div>
           </div>
 
@@ -207,133 +268,188 @@
 
     <!-- Modal de Item -->
     <div id="item-modal" class="modal">
-      <div class="modal-content modal-large">
+      <div class="modal-content modal-large modal-tabbed">
         <div class="modal-header">
           <h3 id="item-modal-title">Adicionar Item</h3>
           <button class="modal-close">&times;</button>
         </div>
-        <div class="modal-body">
+        
+        <!-- Navegação por Abas -->
+        <div class="modal-tabs">
+          <button class="tab-btn active" data-tab="basic">
+            <i class="fas fa-info-circle"></i>
+            Informações Básicas
+          </button>
+          <button class="tab-btn" data-tab="details">
+            <i class="fas fa-cog"></i>
+            Detalhes
+          </button>
+          <button class="tab-btn" data-tab="purchase">
+            <i class="fas fa-shopping-cart"></i>
+            Compra
+          </button>
+          <button class="tab-btn" data-tab="media">
+            <i class="fas fa-image"></i>
+            Mídia
+          </button>
+        </div>
+
+        <div class="modal-body modal-body-tabbed">
           <form id="item-form">
-            <div class="form-group">
-              <label for="item-name">Nome do Item</label>
-              <input type="text" id="item-name" required />
-            </div>
+            <!-- Aba 1: Informações Básicas -->
+            <div class="tab-content active" id="tab-basic">
+              <div class="tab-section">
+                <h4><i class="fas fa-tag"></i> Identificação</h4>
+                <div class="form-group">
+                  <label for="item-name">Nome do Item *</label>
+                  <input type="text" id="item-name" required placeholder="Ex: Sofá 3 lugares" />
+                </div>
 
-            <div class="form-row">
-              <div class="form-group">
-                <label for="item-category">Categoria</label>
-                <select id="item-category" required>
-                  <option value="">Selecione...</option>
-                  <option value="moveis">Móveis</option>
-                  <option value="eletrodomesticos">Eletrodomésticos</option>
-                  <option value="utensilios">Utensílios</option>
-                  <option value="decoracao">Decoração</option>
-                  <option value="outros">Outros</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="item-room">Cômodo</label>
-                <select id="item-room" required>
-                  <option value="">Selecione...</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="item-priority">Prioridade</label>
-                <select id="item-priority" required>
-                  <option value="">Selecione...</option>
-                  <option value="basico">🔴 Básico</option>
-                  <option value="necessario">🟡 Necessário</option>
-                  <option value="util">🟢 Útil</option>
-                  <option value="luxo">🔵 Luxo</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="item-status">Status</label>
-                <select id="item-status" required>
-                  <option value="pendente">⏳ Pendente</option>
-                  <option value="comprado">✅ Comprado</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="item-width">Largura (cm)</label>
-                <input type="number" id="item-width" min="1" max="1000" />
-              </div>
-              <div class="form-group">
-                <label for="item-height">Altura (cm)</label>
-                <input type="number" id="item-height" min="1" max="1000" />
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="item-price">Preço (R$)</label>
-              <input type="number" id="item-price" min="0" step="0.01" />
-            </div>
-
-            <div class="form-group">
-              <label for="item-icon">Ícone</label>
-              <div class="icon-selector">
-                <button type="button" id="selected-icon" class="icon-button">
-                  <i class="fas fa-cube"></i>
-                </button>
-                <button
-                  type="button"
-                  id="choose-icon-btn"
-                  class="btn btn-outline"
-                >
-                  Escolher Ícone
-                </button>
-              </div>
-              <input type="hidden" id="item-icon" value="fas fa-cube" />
-            </div>
-
-            <div class="form-group">
-              <label>Links de Compra</label>
-              <div id="purchase-links" class="purchase-links">
-                <div class="link-group">
-                  <input
-                    type="url"
-                    placeholder="https://..."
-                    class="purchase-link-input"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Nome da loja (opcional)"
-                    class="store-name-input"
-                  />
-                  <button type="button" class="btn btn-danger remove-link">
-                    <i class="fas fa-trash"></i>
-                  </button>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="item-category">Categoria *</label>
+                    <select id="item-category" required>
+                      <option value="">Selecione...</option>
+                      <option value="moveis">🪑 Móveis</option>
+                      <option value="eletrodomesticos">⚡ Eletrodomésticos</option>
+                      <option value="utensilios">🍴 Utensílios</option>
+                      <option value="decoracao">🎨 Decoração</option>
+                      <option value="outros">📦 Outros</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="item-room">Cômodo *</label>
+                    <select id="item-room" required>
+                      <option value="">Selecione...</option>
+                    </select>
+                  </div>
                 </div>
               </div>
-              <button type="button" id="add-link-btn" class="btn btn-outline">
-                <i class="fas fa-plus"></i> Adicionar Link
-              </button>
+
+              <div class="tab-section">
+                <h4><i class="fas fa-star"></i> Classificação</h4>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="item-priority">Prioridade *</label>
+                    <select id="item-priority" required>
+                      <option value="">Selecione...</option>
+                      <option value="basico">🔴 Básico - Essencial</option>
+                      <option value="necessario">🟡 Necessário - Importante</option>
+                      <option value="util">🟢 Útil - Conveniente</option>
+                      <option value="luxo">🔵 Luxo - Opcional</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="item-status">Status *</label>
+                    <select id="item-status" required>
+                      <option value="pendente">⏳ Pendente</option>
+                      <option value="comprado">✅ Comprado</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div class="form-group">
-              <label for="item-description">Descrição</label>
-              <textarea id="item-description" rows="3"></textarea>
+            <!-- Aba 2: Detalhes -->
+            <div class="tab-content" id="tab-details">
+              <div class="tab-section">
+                <h4><i class="fas fa-ruler"></i> Dimensões</h4>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="item-width">Largura (cm)</label>
+                    <input type="number" id="item-width" min="1" max="1000" placeholder="Ex: 200" />
+                    <small class="form-help">Largura do item em centímetros</small>
+                  </div>
+                  <div class="form-group">
+                    <label for="item-height">Altura (cm)</label>
+                    <input type="number" id="item-height" min="1" max="1000" placeholder="Ex: 80" />
+                    <small class="form-help">Altura do item em centímetros</small>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-section">
+                <h4><i class="fas fa-palette"></i> Aparência</h4>
+                <div class="form-group">
+                  <label for="item-icon">Ícone de Representação</label>
+                  <div class="icon-selector">
+                    <button type="button" id="selected-icon" class="icon-button">
+                      <i class="fas fa-cube"></i>
+                    </button>
+                    <button type="button" id="choose-icon-btn" class="btn btn-outline">
+                      <i class="fas fa-icons"></i> Escolher Ícone
+                    </button>
+                  </div>
+                  <input type="hidden" id="item-icon" value="fas fa-cube" />
+                  <small class="form-help">Ícone usado para representar o item na planta baixa</small>
+                </div>
+
+                <div class="form-group">
+                  <label for="item-description">Descrição</label>
+                  <textarea id="item-description" rows="4" placeholder="Descreva características, cor, material, marca, etc."></textarea>
+                  <small class="form-help">Informações adicionais sobre o item</small>
+                </div>
+              </div>
             </div>
 
-            <div class="form-group">
-              <label for="item-image">Imagem</label>
-              <input type="file" id="item-image" accept="image/*" />
-              <div id="image-preview" class="image-preview"></div>
+            <!-- Aba 3: Compra -->
+            <div class="tab-content" id="tab-purchase">
+              <div class="tab-section">
+                <h4><i class="fas fa-dollar-sign"></i> Preço</h4>
+                <div class="form-group">
+                  <label for="item-price">Preço (R$)</label>
+                  <input type="number" id="item-price" min="0" step="0.01" placeholder="0,00" />
+                  <small class="form-help">Valor estimado ou real do item</small>
+                </div>
+              </div>
+
+              <div class="tab-section">
+                <h4><i class="fas fa-link"></i> Links de Compra</h4>
+                <div id="purchase-links" class="purchase-links">
+                  <div class="link-group">
+                    <div class="link-inputs">
+                      <input type="url" placeholder="https://..." class="purchase-link-input" />
+                      <input type="text" placeholder="Nome da loja (opcional)" class="store-name-input" />
+                    </div>
+                    <button type="button" class="btn btn-danger remove-link">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+                <button type="button" id="add-link-btn" class="btn btn-outline btn-add-link">
+                  <i class="fas fa-plus"></i> Adicionar Link
+                </button>
+                <small class="form-help">Adicione links de diferentes lojas para comparar preços</small>
+              </div>
+            </div>
+
+            <!-- Aba 4: Mídia -->
+            <div class="tab-content" id="tab-media">
+              <div class="tab-section">
+                <h4><i class="fas fa-camera"></i> Imagem do Item</h4>
+                <div class="form-group">
+                  <label for="item-image">Carregar Imagem</label>
+                  <div class="file-upload-area">
+                    <input type="file" id="item-image" accept="image/*" />
+                    <div class="file-upload-text">
+                      <i class="fas fa-cloud-upload-alt"></i>
+                      <p>Clique para selecionar uma imagem</p>
+                      <small>PNG, JPG, GIF até 16MB</small>
+                    </div>
+                  </div>
+                  <div id="image-preview" class="image-preview"></div>
+                </div>
+              </div>
             </div>
           </form>
         </div>
+
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" id="cancel-item">
-            Cancelar
+            <i class="fas fa-times"></i> Cancelar
           </button>
           <button type="submit" form="item-form" class="btn btn-primary">
-            Salvar
+            <i class="fas fa-save"></i> Salvar Item
           </button>
         </div>
       </div>

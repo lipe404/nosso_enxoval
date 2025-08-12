@@ -1,0 +1,76 @@
+{
+  "metadata": {
+    "name": "Meu Enxoval",
+    "created_at": "2025-08-11T20:20:14.716211",
+    "version": "1.0"
+  },
+  "data": {
+    "project_name": "Meu Enxoval",
+    "rooms": [
+      {
+        "id": "id_l12oos26t",
+        "name": "Quarto do casal",
+        "width": 20,
+        "height": 20,
+        "color": "#ff00ff",
+        "x": 258,
+        "y": 52
+      },
+      {
+        "id": "id_e3nzz4upg",
+        "name": "Cozinha",
+        "width": 20,
+        "height": 20,
+        "color": "#ff80c0",
+        "x": 255,
+        "y": 251
+      },
+      {
+        "id": "id_k9zf6viab",
+        "name": "Sala de Estar",
+        "width": 20,
+        "height": 20,
+        "color": "#e3f2fd",
+        "x": 57,
+        "y": 255
+      },
+      {
+        "id": "id_mxkpqf9z8",
+        "name": "Banheiro",
+        "width": 10,
+        "height": 10,
+        "color": "#000080",
+        "x": 161,
+        "y": 157
+      }
+    ],
+    "items": [
+      {
+        "id": "id_a45iyz5k3",
+        "name": "Cama de Casal",
+        "category": "moveis",
+        "roomId": "id_l12oos26t",
+        "priority": "necessario",
+        "status": "pendente",
+        "width": 2,
+        "height": 2,
+        "price": 1400,
+        "description": "teste",
+        "image": "/static/uploads/images/4668f3697ac34b0cb1d3810009199e2e_jogo-de-cama-linenn-4.jpg",
+        "icon": "fas fa-bed",
+        "purchaseLinks": [
+          {
+            "url": "https://www.casasbahia.com",
+            "store": "Casas Bahia"
+          }
+        ],
+        "x": 10,
+        "y": 10
+      }
+    ],
+    "settings": {
+      "scale": 10,
+      "currentView": "accounts"
+    }
+  }
+}
