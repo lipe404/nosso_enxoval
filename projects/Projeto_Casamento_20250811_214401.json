@@ -1,0 +1,168 @@
+{
+  "metadata": {
+    "name": "Projeto Casamento",
+    "created_at": "2025-08-11T21:44:01.560843",
+    "version": "1.0"
+  },
+  "data": {
+    "project_name": "Projeto Casamento",
+    "rooms": [
+      {
+        "color": "#800000",
+        "height": 24.7,
+        "id": "id_itdk96762",
+        "name": "Quarto do casal",
+        "width": 34.8,
+        "x": 44,
+        "y": 77
+      },
+      {
+        "color": "#00ffff",
+        "height": 20,
+        "id": "id_fidnoq957",
+        "name": "Cozinha",
+        "width": 34.4,
+        "x": 45,
+        "y": 75
+      },
+      {
+        "color": "#00ff40",
+        "height": 58.8,
+        "id": "id_grh5osaco",
+        "name": "Sala de Estar",
+        "width": 30.8,
+        "x": 389,
+        "y": -366
+      },
+      {
+        "color": "#fde3f2",
+        "height": 14.5,
+        "id": "id_gmo43iw6e",
+        "name": "Banheiro",
+        "width": 34.4,
+        "x": 45,
+        "y": -514
+      }
+    ],
+    "items": [
+      {
+        "category": "moveis",
+        "description": "",
+        "height": 10,
+        "icon": "fas fa-bed",
+        "id": "id_udceeqdw2",
+        "image": "/static/uploads/images/ddc548fddcc04dfc8e5f0edd025473e8_73578431a92bc93d4f52bb67bff8dc76.webp",
+        "name": "Cama de Casal",
+        "price": 1022.91,
+        "priority": "necessario",
+        "purchaseLinks": [
+          {
+            "store": "Magazine Luiza",
+            "url": "https://www.magazineluiza.com.br/cama-box-casal-box-colchao-plumatex-de-mola-ensacada-53cm-de-altura-turim/p/229899500/co/cmbx/"
+          }
+        ],
+        "roomId": "id_itdk96762",
+        "status": "pendente",
+        "width": 10,
+        "x": 8,
+        "y": 18
+      },
+      {
+        "category": "moveis",
+        "description": "",
+        "height": 10,
+        "icon": "fas fa-cube",
+        "id": "id_d7rj5aw2a",
+        "image": "/static/uploads/images/68090a8ed24b4d59a786e07a87dfb062_d8004f4ce60b07c7947966210401fcce.webp",
+        "name": "Guarda Roupa",
+        "price": 740,
+        "priority": "necessario",
+        "purchaseLinks": [
+          {
+            "store": "Magazine Luiza",
+            "url": "https://www.magazineluiza.com.br/guarda-roupa-com-espelho-4-portas-4-gavetas-araplac-pequim/p/236860700/mo/guro/"
+          }
+        ],
+        "roomId": "id_itdk96762",
+        "status": "pendente",
+        "width": 10,
+        "x": 40,
+        "y": 17
+      },
+      {
+        "category": "eletrodomesticos",
+        "description": "",
+        "height": 10,
+        "icon": "fas fa-utensils",
+        "id": "id_df8bgxac8",
+        "image": "/static/uploads/images/09b533b73e6f4e6ebdfe68521b2f70f0_9bd3cf67cb270761c0f089ddf1b17a2e.webp",
+        "name": "Geladeira",
+        "price": 3000,
+        "priority": "basico",
+        "purchaseLinks": [
+          {
+            "store": "Link",
+            "url": "https://www.magazineluiza.com.br/geladeira-brastemp-frost-free-duplex-375l-inox-com-compartimento-extrafrio-fresh-zone-brm44hk/p/013085700/ed/refr/"
+          }
+        ],
+        "roomId": "id_fidnoq957",
+        "status": "pendente",
+        "width": 10,
+        "x": 10,
+        "y": 10
+      },
+      {
+        "id": "id_mfy3pkmrp",
+        "name": "Sofá 3 Lugares",
+        "category": "moveis",
+        "roomId": "id_grh5osaco",
+        "priority": "util",
+        "status": "pendente",
+        "width": 20,
+        "height": 20,
+        "price": 1140,
+        "description": "Poltrona inclusa",
+        "image": "/static/uploads/images/6fd7c357f0ad4710b28a0e9b74750742_438e6d08e4f2a7d1c14512e1793ede24.webp",
+        "icon": "fas fa-chair",
+        "purchaseLinks": [
+          {
+            "url": "https://www.magazineluiza.com.br/sofa-retratil-reclinavel-3-lugares-suede-phormatta-evolution-smp/p/121927508/mo/msof/",
+            "store": "Magazine Luiza"
+          },
+          {
+            "url": "https://www.magazineluiza.com.br/sofa-retratil-reclinavel-3-lugares-veludo-medelin-besthouse/p/237555100/mo/msof/?seller_id=magazineluiza",
+            "store": "Link"
+          }
+        ],
+        "x": 10,
+        "y": 10
+      },
+      {
+        "id": "id_m80018m09",
+        "name": "Fogão 4 bocas",
+        "category": "eletrodomesticos",
+        "roomId": "id_fidnoq957",
+        "priority": "basico",
+        "status": "pendente",
+        "width": 10,
+        "height": 10,
+        "price": 716,
+        "description": "Gás elétrico",
+        "image": "/static/uploads/images/34108ed6b14a432e81931756f36afd6b_9d601479c32abde39275166a1de03539.webp",
+        "icon": "fas fa-utensils",
+        "purchaseLinks": [
+          {
+            "url": "https://www.magazineluiza.com.br/fogao-4-bocas-esmaltec-preto-ideal-pop-4120/p/238635100/ed/fg4b/",
+            "store": "Magazine Luiza"
+          }
+        ],
+        "x": 10,
+        "y": 10
+      }
+    ],
+    "settings": {
+      "scale": 10,
+      "currentView": "list"
+    }
+  }
+}
